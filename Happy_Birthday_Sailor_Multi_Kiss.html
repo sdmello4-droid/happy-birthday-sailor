@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Sailor ❤️ Multi Kiss</title>
+<style>
+body{margin:0;overflow:hidden;background:linear-gradient(135deg,#ffd6e7,#fff0f5);font-family:Arial;text-align:center}
+h1{color:#c2185b;margin:10px}
+#counter{font-size:22px;font-weight:bold}
+#wrap{position:relative;width:100vw;height:88vh}
+#sailor{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:320px;border-radius:20px;z-index:1000}
+.sian{position:absolute;width:48px;height:48px;border-radius:50%;object-fit:cover;cursor:pointer;transition:all 1s ease;z-index:10}
+.kiss{position:absolute;font-size:34px;z-index:9999;animation:pop 1.2s forwards}
+@keyframes pop{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.8)}}
+</style>
+</head>
+<body>
+<h1>⚓ Happy Birthday, Sailor ❤️</h1>
+<div id="counter">Kisses sent: 0 😘</div>
+<div id="wrap"><img id="sailor" src="sailor.jpg"></div>
+
+<script>
+const faces=["sian1.jpg","sian2.jpg","sian3.jpg","sian4.jpg","sian5.jpg","sian6.jpg","sian7.jpg","sian8.jpg","sian9.jpg"];
+const wrap=document.getElementById("wrap");
+const centerX=window.innerWidth/2;
+const centerY=window.innerHeight/2;
+let kisses=0;
+
+function validSpot(x,y){
+ const dx=x-centerX, dy=y-centerY;
+ return Math.sqrt(dx*dx+dy*dy)>260;
+}
+
+function spawnSian(){
+ const img=document.createElement("img");
+ img.className="sian";
+ img.src=faces[Math.floor(Math.random()*faces.length)];
+
+ let x,y;
+ do{
+   x=Math.random()*window.innerWidth;
+   y=Math.random()*window.innerHeight*0.9;
+ }while(!validSpot(x,y));
+
+ img.style.left=x+"px";
+ img.style.top=y+"px";
+
+ img.onclick=()=>{
+   const originalLeft=img.style.left;
+   const originalTop=img.style.top;
+
+   kisses++;
+   document.getElementById("counter").innerHTML="Kisses sent: "+kisses+" 😘";
+
+   img.style.zIndex="5000";
+   img.style.width="160px";
+   img.style.height="160px";
+
+   img.style.left=(centerX-80)+"px";
+   img.style.top=(centerY-90)+"px";
+
+   // MULTIPLE KISSES
+   const kissSpots=[
+     [-60,-50], [50,-50], [0,-80],
+     [-40,10], [40,10], [0,40],
+     [-20,-10], [20,-10]
+   ];
+
+   kissSpots.forEach((p,i)=>{
+      setTimeout(()=>{
+        const k=document.createElement("div");
+        k.className="kiss";
+        k.innerHTML=Math.random()>0.5?"😘":"💋";
+        k.style.left=(centerX+p[0])+"px";
+        k.style.top=(centerY+p[1])+"px";
+        wrap.appendChild(k);
+        setTimeout(()=>k.remove(),1200);
+      }, i*120);
+   });
+
+   setTimeout(()=>{
+      img.style.left=originalLeft;
+      img.style.top=originalTop;
+      img.style.width="48px";
+      img.style.height="48px";
+      img.style.zIndex="10";
+   },2200);
+ };
+ wrap.appendChild(img);
+}
+
+for(let i=0;i<80;i++) spawnSian();
+</script>
+</body>
+</html>
